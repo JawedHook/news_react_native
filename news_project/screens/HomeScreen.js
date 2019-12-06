@@ -18,8 +18,8 @@ const HomeScreen = props => {
 
     const CardComponent = props => {
         return (
-            <View>
-                <Image style={{width:80, height:80}} source={{uri: props.urlToImage}}/>
+            <View style={{marginBottom:50, width:'95%'}}>
+                <Image style={{width:'100%', height:140, marginBottom:10}} source={{uri: props.urlToImage}}/>
                 <Text>{props.title}</Text>
                 <Text>{props.description}</Text>
             </View>
@@ -33,9 +33,11 @@ const HomeScreen = props => {
 
     return (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <Text style={{marginTop:50, marginBottom:30}}>News</Text>
             {
                 news ? 
                     <FlatList
+                        style={{marginBottom: 40}}
                         data={news}
                         renderItem={({item}, index) => CardComponent(item, index)}
                         keyExtractor={(article, index) => article.title}
