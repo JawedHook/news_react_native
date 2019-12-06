@@ -1,12 +1,24 @@
 import React, { Component, useState, useEffect } from 'react'
 import NewsService from '../services/NewsService';
-import { View, Text, FlatList, Image } from 'react-native';
+import { View, Text, FlatList, Image, TouchableOpacity } from 'react-native';
 
 const HomeScreen = props => {
-
+    
     const serv = new NewsService()
     const [news, setNews] = useState([])
 
+    props.navigationOptions = (e) => {
+        return{
+            title = 'Home',
+            headerRight: (
+                <Icon size={25} name={'ios-add'}
+                    onPress={() => {
+                    e.navigation.push('Detail');
+                }} />
+            )
+        }
+    }
+    
     const getNews = async () => {
         try{
             let newsResponse = await serv.getNews()
@@ -15,6 +27,7 @@ const HomeScreen = props => {
             console.log(err)
         }
     }
+
 
     const CardComponent = props => {
         return (
