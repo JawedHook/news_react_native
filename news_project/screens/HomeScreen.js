@@ -9,16 +9,9 @@ const HomeScreen = props => {
 
     props.navigationOptions = (e) => {
         return{
-            title = 'Home',
-            headerRight: (
-                <Icon size={25} name={'ios-add'}
-                    onPress={() => {
-                    e.navigation.push('Detail');
-                }} />
-            )
         }
     }
-    
+
     const getNews = async () => {
         try{
             let newsResponse = await serv.getNews()
