@@ -1,14 +1,15 @@
 import React from 'react';
 
 import MainTabNavigator from './navigation/MainTabNavigator';
+import { Provider } from 'react-redux'
+import Store from './Store/configureStore'
 
-
-class App extends React.Component {
+export default class App extends React.Component {
   render(){
     return (
-      <MainTabNavigator/>
+      <Provider store={Store}>
+        <MainTabNavigator/>
+      </Provider>
     );
   }
 }
-
-export default App;
