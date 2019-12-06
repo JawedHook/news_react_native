@@ -13,9 +13,8 @@ const HomeScreen = props => {
     const getArticles = async () => {
         let catAsyncS = await AsyncStorage.getItem('catAsyncS')
         catAsyncS = JSON.parse(catAsyncS)
-        console.log(catAsyncS)
         setNoSettings(catAsyncS.length > 0)
-        if(noSettings){
+        if(catAsyncS.length > 0){
             try{
                 const PromiseCategories = catAsyncS.map( async category => {
                     return await serv.getNewsByCategory(category)
@@ -25,6 +24,7 @@ const HomeScreen = props => {
                 articlesData.map( category => {
                     category.data.articles.map( article => {
                         allArticles.push(article)
+                        console.log(article.title)
                     })
                 })
                 _addArticles(allArticles)
@@ -39,7 +39,9 @@ const HomeScreen = props => {
         props.dispatch(action)
     }
 
-    getArticles()
+    useEffect(() => {
+        getArticles()
+    }, [])
 
     return (
         <View style={{flex: 1}}>
@@ -51,10 +53,10 @@ const HomeScreen = props => {
                             style={{marginBottom: 40}}
                             data={props.stateArticles}
                             renderItem={(article, index) => <ItemArticle article={article}/>}
-                            keyExtractor={(article) => article.title}
+                            keyExtractor={(article, index) => index.toString()}
                         />
                     : <Text>Faut faire le loading</Text>
-                : <Text>No settings</Text>
+                : <Text style={{textAlign:"center", marginTop: 50}}>No settings</Text>
             }
         </View>
     )

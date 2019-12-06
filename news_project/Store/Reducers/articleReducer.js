@@ -5,9 +5,11 @@ const actionsArticles = (state = initialState, action) => {
     switch (action.type) {
         case 'ADD_ARTICLES':
             const addArticles = action.value
-            nextState = {
-                ...state,
-                articles: addArticles
+            if(state.articles.length === 0){
+                nextState = {
+                    ...state,
+                    articles: addArticles
+                }
             }
             return nextState || state
         case 'REMOVE_ARTICLES':
