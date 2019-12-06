@@ -1,12 +1,11 @@
 import axios from 'axios'
 
 const key = ''
-const country = 'us'
-const url = `https://newsapi.org/v2/top-headlines?country=${country}&apiKey=${key}`
+const url = `https://newsapi.org/v2/everything?apiKey=${key}&`
 
 class NewsService{
-    getNews(){
-        return axios.get(`${url}`)
+    getNewsByCategory(category){
+        return axios.get(`${url}q=${category.toLowerCase()}`) 
     }
 }
 
