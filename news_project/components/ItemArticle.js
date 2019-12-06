@@ -18,6 +18,8 @@ const ItemArticle = props => {
         props.dispatch(action)
     }
 
+    const {navigate} = props.navigation
+
     const article = props.article
     const readArticles = props.readArticles
     if(!readArticles.includes(article.item.title)){
@@ -31,10 +33,11 @@ const ItemArticle = props => {
                 </View>
                 <View style={styles.standaloneRowFront}>
                     <View style={{ flex: 1, flexDirection:'column', justifyContent: 'space-between' }}>
-                        <Image style={{ width: '100%', height: 200 }} source={{ uri: `${article.item.urlToImage}` }} />
+                        <Image style={{ width: '100%', height:200 }} source={{ uri: `${article.item.urlToImage}` }} />
                         <View style={{ flex: 1, flexDirection: 'column', padding:10, paddingBottom:30}}>
                             <Text style={{paddingBottom:20, fontSize:20}}>{article.item.title}</Text>
                             <Text>{article.item.description}</Text>
+                            <Button onPress={() => navigate('Detail', {article:props})} title='View Article'/>
                         </View>
                     </View>
                 </View>
@@ -46,7 +49,8 @@ const ItemArticle = props => {
 
 
 ItemArticle.propTypes = {
-    article: PropTypes.object.isRequired
+    article: PropTypes.object.isRequired,
+    navigation: PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state) => {
@@ -60,7 +64,6 @@ export default connect(mapStateToProps)(ItemArticle)
 const styles = StyleSheet.create({
     standaloneRowFront: {
         backgroundColor: 'white',
-        height: 300,
         paddingBottom:20
     },
     standaloneRowBack: {

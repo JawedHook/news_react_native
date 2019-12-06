@@ -5,16 +5,18 @@ import { View, Text, FlatList, Image, AsyncStorage } from 'react-native';
 import { connect } from 'react-redux'
 
 import ItemArticle from '../components/ItemArticle';
+import { ActivityIndicator } from 'react-native-paper';
 
 const HomeScreen = props => {
     const serv = new NewsService()
     const [noSettings, setNoSettings] = useState(false)
+    const [displayArticles, setDisplayArticles] = useState([])
 
-    const getArticles = async () => {
+    const getArticles = async shouldUpdate => {
         let catAsyncS = await AsyncStorage.getItem('catAsyncS')
         catAsyncS = JSON.parse(catAsyncS)
         setNoSettings(catAsyncS.length > 0)
-        if(catAsyncS.length > 0){
+        if(catAsyncS.length > 0 || shouldUpdate){
             try{
                 const PromiseCategories = catAsyncS.map( async category => {
                     return await serv.getNewsByCategory(category)
@@ -24,9 +26,9 @@ const HomeScreen = props => {
                 articlesData.map( category => {
                     category.data.articles.map( article => {
                         allArticles.push(article)
-                        console.log(article.title)
                     })
                 })
+                setDisplayArticles(allArticles)
                 _addArticles(allArticles)
             } catch( err ) {
                 console.log(err)
@@ -40,22 +42,32 @@ const HomeScreen = props => {
     }
 
     useEffect(() => {
-        getArticles()
+        getArticles(false)
     }, [])
+
+    props.navigation.addListener(
+        'didFocus',
+        () => {
+            getArticles(true)
+        }
+    )
 
     return (
         <View style={{flex: 1}}>
-            <Text style={{marginTop:50, marginBottom:30, textAlign:'center'}}>News</Text>
+            <Text style={{marginTop:20, marginBottom:20, textAlign:'center'}}>News</Text>
             {
                 noSettings ?
-                    props.stateArticles ? 
+                    displayArticles.length > 0 ? 
                         <FlatList
-                            style={{marginBottom: 40}}
-                            data={props.stateArticles}
-                            renderItem={(article, index) => <ItemArticle article={article}/>}
+                            data={displayArticles}
+                            renderItem={(article, index) => <ItemArticle article={article} navigation={props.navigation}/>}
                             keyExtractor={(article, index) => index.toString()}
                         />
-                    : <Text>Faut faire le loading</Text>
+                    : 
+                    <View>
+                        <ActivityIndicator/>
+                        <Text style={{textAlign:"center", marginTop: 50}}>Très beau loading</Text>
+                    </View>
                 : <Text style={{textAlign:"center", marginTop: 50}}>No settings</Text>
             }
         </View>
