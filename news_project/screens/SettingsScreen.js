@@ -33,7 +33,6 @@ const SettingsScreen = props => {
 
     const handleCategoryPress = async category => {
         let catAsyncS = await AsyncStorage.getItem('catAsyncS')
-        console.log(catAsyncS)
         catAsyncS = JSON.parse(catAsyncS)
         // No categories found : define array and push element
         if(catAsyncS === null){

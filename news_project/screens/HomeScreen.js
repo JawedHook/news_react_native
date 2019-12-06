@@ -2,15 +2,18 @@ import React, { Component, useState, useEffect } from 'react'
 import NewsService from '../services/NewsService';
 import { View, Text, FlatList, Image, AsyncStorage } from 'react-native';
 
-const HomeScreen = props => {
+import { connect } from 'react-redux'
 
+import ItemArticle from '../components/ItemArticle';
+
+const HomeScreen = props => {
     const serv = new NewsService()
-    const [articles, setArticles] = useState([])
     const [noSettings, setNoSettings] = useState(false)
 
     const getArticles = async () => {
         let catAsyncS = await AsyncStorage.getItem('catAsyncS')
         catAsyncS = JSON.parse(catAsyncS)
+        console.log(catAsyncS)
         setNoSettings(catAsyncS.length > 0)
         if(noSettings){
             try{
@@ -24,45 +27,31 @@ const HomeScreen = props => {
                         allArticles.push(article)
                     })
                 })
-                setArticles(allArticles)
+                _addArticles(allArticles)
             } catch( err ) {
                 console.log(err)
             }
         }
     }
 
-    const CardComponent = props => {
-        return (
-            <View style={{marginBottom:50, width:'95%'}}>
-                <Image style={{width:'100%', height:140, marginBottom:10}} source={{uri: props.urlToImage}}/>
-                <Text>{props.title}</Text>
-                <Text>{props.description}</Text>
-            </View>
-        )
+    const _addArticles = articles => {
+        const action = {type:'ADD_ARTICLES', value:articles}
+        props.dispatch(action)
     }
 
-    useEffect(() => {
-        getArticles()
-    }, [noSettings])
-
-    props.navigation.addListener(
-        'didFocus',
-        () => {
-            getArticles()
-        }
-    )
+    getArticles()
 
     return (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <Text style={{marginTop:50, marginBottom:30}}>News</Text>
+        <View style={{flex: 1}}>
+            <Text style={{marginTop:50, marginBottom:30, textAlign:'center'}}>News</Text>
             {
                 noSettings ?
-                    articles ? 
+                    props.stateArticles ? 
                         <FlatList
                             style={{marginBottom: 40}}
-                            data={articles}
-                            renderItem={({item}, index) => CardComponent(item, index)}
-                            keyExtractor={article => article.title}
+                            data={props.stateArticles}
+                            renderItem={(article, index) => <ItemArticle article={article}/>}
+                            keyExtractor={(article) => article.title}
                         />
                     : <Text>Faut faire le loading</Text>
                 : <Text>No settings</Text>
@@ -71,4 +60,10 @@ const HomeScreen = props => {
     )
 }
 
-export default HomeScreen;
+const mapStateToProps = (state) => {
+    return {
+        stateArticles: state.articles
+    }
+}
+
+export default connect(mapStateToProps)(HomeScreen)
