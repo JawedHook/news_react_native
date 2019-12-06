@@ -1,6 +1,6 @@
 import React, { Component, useState, useEffect } from 'react'
 import NewsService from '../services/NewsService';
-import { View, Text, FlatList, Image, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, Image, TouchableOpacity, Button } from 'react-native';
 
 const HomeScreen = props => {
     
@@ -21,13 +21,17 @@ const HomeScreen = props => {
         }
     }
 
+    const {navigate} = props.navigation;
 
     const CardComponent = props => {
         return (
-            <View style={{marginBottom:50, width:'95%'}}>
+            <View 
+                style={{marginBottom:50, width:'95%'}}
+            >
                 <Image style={{width:'100%', height:140, marginBottom:10}} source={{uri: props.urlToImage}}/>
                 <Text>{props.title}</Text>
                 <Text>{props.description}</Text>
+                <Button onPress={() => navigate('Detail', {article:props})} title='View Article'/>
             </View>
         )
     }
