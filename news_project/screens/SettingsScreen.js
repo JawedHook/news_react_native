@@ -28,7 +28,7 @@ const SettingsScreen = props => {
 
     const CategoryComponent = props => {
         let isSelected = categoriesSelected.find(cat => cat === props)
-        return <Text style={isSelected ? {backgroundColor:'red', marginBottom:5} : {backgroundColor:'blue',marginBottom:5}} onPress={() => handleCategoryPress(props)}>{props}</Text>
+        return <Text style={isSelected ? {backgroundColor:'grey', color:"black", marginBottom:5, padding:5} : {backgroundColor:'lightgrey', color:"grey" ,marginBottom:5, padding:5}} onPress={() => handleCategoryPress(props)}>{props}</Text>
     }
 
     const handleCategoryPress = async category => {
