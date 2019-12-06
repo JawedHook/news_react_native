@@ -1,6 +1,6 @@
 import React, { Component, useState, useEffect } from 'react'
 import NewsService from '../services/NewsService';
-import { View, Text } from 'react-native';
+import { View, Text, FlatList, Image } from 'react-native';
 
 const HomeScreen = props => {
 
@@ -10,19 +10,38 @@ const HomeScreen = props => {
     const getNews = async () => {
         try{
             let newsResponse = await serv.getNews()
-            setNews(newsResponse)
+            setNews(newsResponse.data.articles)
         } catch( err ) {
             console.log(err)
         }
     }
 
+    const CardComponent = props => {
+        return (
+            <View>
+                <Image style={{width:80, height:80}} source={{uri: props.urlToImage}}/>
+                <Text>{props.title}</Text>
+                <Text>{props.description}</Text>
+            </View>
+        )
+    }
+
     useEffect(() => {
         getNews()
+
     }, [])
 
     return (
-        <View>
-
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            {
+                news ? 
+                    <FlatList
+                        data={news}
+                        renderItem={({item}, index) => CardComponent(item, index)}
+                        keyExtractor={(article, index) => article.title}
+                    />
+                : <Text>Faut faite le loading</Text>
+            }
         </View>
     )
 }
